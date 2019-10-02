@@ -13,7 +13,7 @@ namespace simulation_game
             name = "Blizzard";
         }
 
-    public override string SaveData()
+        public override string SaveData()
         {
             return $"W,{Xvalue},{Yvalue},{Team},{Health},{speed},{MaxHealth}";
         }    
@@ -31,4 +31,6 @@ namespace simulation_game
         }
 
     }
+
+    
 }

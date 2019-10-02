@@ -9,7 +9,7 @@ namespace simulation_game
 {
     class Map
     {
-        public string[,] map = new string[mapSize, mapSize];
+        public string[,] map;
 
         public Unit[] players;
         public Building[] buildings;
@@ -18,18 +18,31 @@ namespace simulation_game
         public Random r = new Random();      //r.Next(1,20);   random number within the array's bounds
         string[] teams = { "A", "B", "C" };
 
-        const int mapSize = 20;
+        public int mapSize;
+
+
         const string FILENAME = "MapData.txt";
         const char DELIMITER = ',';
         enum UnitSTAT  { Symbol = 0, X = 1, Y = 2, Team = 3, Health = 4, Speed =5, MaxHealth = 6}
         enum FactorySTAT { Symbol = 0, X = 1, Y = 2, Team = 3, Spawnpoint = 4, ProductionSpeed = 5, Health = 6}
         enum ResourceSTAT { Symbol = 0, X = 1, Y = 2, Team = 3, Health = 4, ResourcePerRound = 5, ResourcePool = 6}
-        public Map(int numUnits, int numBuildings)
+
+        public Map()
         {
+            
+        }
+
+        public void setWorld(int numUnits, int numBuildings, int mapSize)
+        {
+            this.mapSize = mapSize;
+            map = new string[mapSize, mapSize];
+
             players = new Unit[numUnits];
             buildings = new Building[numBuildings];
             WorldBuild();
         }
+
+        
 
         public void WorldBuild()
         {
@@ -39,20 +52,20 @@ namespace simulation_game
                 int unitType = r.Next(3);
                 if ( unitType == 0)
                 {
-                    players[i] = new Ranged(r.Next(1, mapSize), r.Next(0, mapSize), teams[r.Next(2)]);
+                    players[i] = new Ranged(r.Next(1, mapSize), r.Next(0, mapSize), teams[r.Next(2)]);   // make a Ranged Boi
 
                 }
                 else if(unitType == 1)
                 {
-                    players[i] = new Melee(r.Next(1, mapSize), r.Next(0, mapSize), teams[r.Next(2)]);
+                    players[i] = new Melee(r.Next(1, mapSize), r.Next(0, mapSize), teams[r.Next(2)]);   // make a melee Boi
                 }
                 else
                 {
-                    players[i] = new Wizzard(r.Next(1, mapSize), r.Next(0, mapSize), teams[r.Next(3)]);
+                    players[i] = new Wizzard(r.Next(1, mapSize), r.Next(0, mapSize), teams[3]);  // make a wizard Boi
                 }
             }
 
-            for (int i = 0; i < buildings.Length; i++)//creates the player types and randomizes their positions
+            for (int i = 0; i < buildings.Length; i++)//creates the building types and randomizes their positions
             {
                 if (r.Next(2) == 0)
                 {

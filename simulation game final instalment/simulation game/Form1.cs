@@ -7,26 +7,35 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
+
 
 namespace simulation_game
 {
     public partial class Form1 : Form
     {
-        GameEngine game = new GameEngine();
+        GameEngine game;
         Timer round = new Timer();
+        
+
         public Form1()
         {
             InitializeComponent();
 
-            DrawMap();
-            ShowUnits();
-            initTimer();
+            //DrawMap();
+            //ShowUnits();
+            //initTimer();
             
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            ShowMyDialogBox();
+            game = new GameEngine();
+            DrawMap();
+            ShowUnits();
+            initTimer();
+
         }
 
         void initTimer()
@@ -109,6 +118,25 @@ namespace simulation_game
             DrawMap();
             ShowUnits();
             lblMap.Text += "Map loaded <<<>>>";
+        }
+
+        public int ShowMyDialogBox()
+        {
+
+            object InputMenu;
+            string defaultResponse = "20";
+            InputMenu = Interaction.InputBox("Please enter a map size","Map size editor", defaultResponse);
+
+            if ((string)InputMenu == "")
+            {
+                return (int.Parse)(defaultResponse);
+            }
+            else
+            {
+                return (int.Parse)(InputMenu.ToString());
+            }
+
+           
         }
     }
 }
