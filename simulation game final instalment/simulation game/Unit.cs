@@ -24,7 +24,7 @@ namespace simulation_game
            
             for (int i = 0; i < speed; i++)
             {
-                if (closestBuilding != null)
+                if (closestBuilding != null)//if there are no buildings left, go to a unit
                 {
                     xDifference = closestBuilding.XPos - Xvalue;
                     yDifference = closestBuilding.YPos - Yvalue;
@@ -81,7 +81,7 @@ namespace simulation_game
 
         
 
-        public void RandomMove(int mapWidth, int mapHeight)
+        public void RandomMove(int mapWidth, int mapHeight)  //moves the unit in a random direction
         {
             int tryX;
             int tryY;
@@ -90,7 +90,7 @@ namespace simulation_game
             bool movable = false;
 
 
-            while (movable == false)
+            while (movable == false)//while the unit cannot move to the atempted position, a new position must be provided
             {
                 switch (r.Next(8))
                 {
@@ -133,7 +133,7 @@ namespace simulation_game
 
                 if (CanMove(tryX, tryY, mapWidth, mapHeight))
                 {
-                    movable = true;
+                    movable = true;//if the unit can move to the coords then the unit will move there
                 }
             }
             Xvalue = tryX;
@@ -143,17 +143,17 @@ namespace simulation_game
         
        
 
-        public bool CanMove(int x, int y, int mapWidth, int mapHeight)
+        public bool CanMove(int x, int y, int mapWidth, int mapHeight)  //checks to see if the unit can move somewhere that will not be outside the map...because....out of bounds error......you know
         {
             bool clear = true;
-            if (x < 0 | x >= mapWidth | y < 0 | y >= mapHeight)
+            if (x < 0 | x >= mapWidth | y < 0 | y >= mapHeight)//parameters that are ILLEGAL  
             {
                 clear = false;
             }
             return clear;
         }
 
-        public bool WithinRange()
+        public bool WithinRange()  //checks if the closest unit is in range
         {
             double distance = 0;
             int Xdistance;
@@ -174,7 +174,7 @@ namespace simulation_game
 
         }
 
-        public bool WithinRange(Building building)
+        public bool WithinRange(Building building)//same thing as the one above but overloaded to check if a building is in range
         {
             double distance = 0;
             int Xdistance;
@@ -198,7 +198,7 @@ namespace simulation_game
 
         }
 
-        public void NearestEnemy(Unit[] units)
+        public void NearestEnemy(Unit[] units)//checks the avalile units to see which one is closest(excluding itself  LOL  )
         {
             closestDistance = int.MaxValue;
             closestUnit = null;
@@ -208,11 +208,11 @@ namespace simulation_game
                 double distance = 0;
                 int Xdistance;
                 int Ydistance;
-                if (unitFocus != this & unitFocus.Team != Team & unitFocus.IsDead == false)
+                if (unitFocus != this & unitFocus.Team != Team & unitFocus.IsDead == false)//if the unit is not itself, not in the same team and is alive then do a calculation
                 {
                     Xdistance = unitFocus.Xvalue - Xvalue;
                     Ydistance = unitFocus.Yvalue - Yvalue;
-                    distance = Math.Sqrt(Xdistance * Xdistance + Ydistance * Ydistance);
+                    distance = Math.Sqrt(Xdistance * Xdistance + Ydistance * Ydistance); //finds distance between the units
                     if (distance < closestDistance)
                     {
                         closestDistance = distance;
@@ -227,7 +227,7 @@ namespace simulation_game
             closestDistance = int.MaxValue;
             closestUnit = null;
 
-            foreach (Building BuildingFocus in buildings)
+            foreach (Building BuildingFocus in buildings)//checks each building to see which one is the closest
             {
                 double distance = 0;
                 int Xdistance;
@@ -236,7 +236,7 @@ namespace simulation_game
                 {
                     Xdistance = BuildingFocus.XPos - Xvalue;
                     Ydistance = BuildingFocus.YPos - Yvalue;
-                    distance = Math.Sqrt(Xdistance * Xdistance + Ydistance * Ydistance);
+                    distance = Math.Sqrt(Xdistance * Xdistance + Ydistance * Ydistance);//finds distance between the unit and building
                     if (distance < closestDistance)
                     {
                         closestDistance = distance;
@@ -246,7 +246,7 @@ namespace simulation_game
             }
         }
 
-        public void Kill()
+        public void Kill()//it does exactly what it says
         {
             Symbol = "X";
             IsDead = true;
@@ -271,7 +271,7 @@ namespace simulation_game
             isDead = false;
         }
 
-        public void Attack(Unit otherUnit)
+        public void Attack(Unit otherUnit)//method that attacks units
         {
             otherUnit.Health -= attack;
             isInAction = false;
@@ -282,7 +282,7 @@ namespace simulation_game
             }
         }
 
-        public void Attack(Building otherBuilding)
+        public void Attack(Building otherBuilding)//method that attacks buildings
         {
             otherBuilding.Health -= attack;
             isInAction = false;

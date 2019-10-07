@@ -15,24 +15,24 @@ namespace simulation_game
 
         public override string SaveData()
         {
-            return $"W,{Xvalue},{Yvalue},{Team},{Health},{speed},{MaxHealth}";
+            return $"W,{Xvalue},{Yvalue},{Team},{Health},{speed},{MaxHealth}";//returns all the wizards stats
         }    
 
         public override string ToString()
         {
             if (Health <= 0)
             {
-                return "Wizard: DEAD";
+                return "Wizard: DEAD";//if dead
             }
             else
             {
-                return "Wizard unit: " + name + " \n Health: " + Health + "\n Range: " + attackRange + "\n Speed: " + speed + "\n Team: " + team;
+                return "Wizard unit: " + name + " \n Health: " + Health + "\n Range: " + attackRange + "\n Speed: " + speed + "\n Team: " + team;//if alive, show stats
             }
         }
 
         
 
-        public bool WithinRange(Unit unit)
+        public bool WithinRange(Unit unit)//overloaded version to check if a unit is in range for AOE attack
         {
             double distance = 0;
             int Xdistance;
@@ -53,7 +53,7 @@ namespace simulation_game
 
         }
 
-        public void Move(Unit unit)
+        public void Move(Unit unit)//overloaded version that just lets the wizard focus on units
         {
             int xDifference;
             int yDifference;

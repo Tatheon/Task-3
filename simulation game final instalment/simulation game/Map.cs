@@ -36,7 +36,7 @@ namespace simulation_game
             
         }
 
-        public void setWorld(int numUnits, int numBuildings, string[] mapSize)
+        public void setWorld(int numUnits, int numBuildings, string[] mapSize)//multi use method that 
         {
             mapWidth = (int.Parse)(mapSize[0]);
             mapHeight = (int.Parse)(mapSize[1]);
@@ -86,19 +86,19 @@ namespace simulation_game
                         SpawnVal = 1;
                     }
 
-                    buildings[i] = new FactoryBuilding(r.Next(1, mapWidth), yValue, teams[r.Next(2)], SpawnVal);
+                    buildings[i] = new FactoryBuilding(r.Next(1, mapWidth), yValue, teams[r.Next(2)], SpawnVal);//make a factory
 
                 }
                 else
                 {
-                    buildings[i] = new ResourceBuilding(r.Next(1, mapWidth), r.Next(0, mapHeight), teams[r.Next(2)]);
+                    buildings[i] = new ResourceBuilding(r.Next(1, mapWidth), r.Next(0, mapHeight), teams[r.Next(2)]);//make a recource building
                 }
             }
 
             UpdateWorld();
         }
 
-        public void UpdateWorld()
+        public void UpdateWorld()//update the map of any changes
         {
             for (int y = 0; y < mapHeight; y++)
             {
@@ -125,7 +125,7 @@ namespace simulation_game
             string line = reader.ReadLine();
             string[] details;
 
-            buildings = new Building[0];           //add the word details to be saved in their own world file that stores map width, height and round.
+            buildings = new Building[0];           
             players = new Unit[0];
 
             while (line!=null)

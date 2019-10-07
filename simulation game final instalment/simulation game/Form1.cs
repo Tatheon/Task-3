@@ -30,9 +30,9 @@ namespace simulation_game
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            game = new GameEngine();
-            ResetWorld();
-            initTimer();
+            game = new GameEngine();//create the engine
+            ResetWorld();//creates starting world
+            initTimer();//creates timer
         }
 
         void initTimer()
@@ -41,11 +41,11 @@ namespace simulation_game
             round.Tick += TimerTickHandeler;
         }
 
-        void TimerTickHandeler(object sender, EventArgs e)
+        void TimerTickHandeler(object sender, EventArgs e)//every tick on the timer, this must happen
         {
-            game.Run();
-            game.world.UpdateWorld();
-            UpdateUI();
+            game.Run();//game logic will do their tasks
+            game.world.UpdateWorld();//update map
+            UpdateUI();//show the map
 
             if (game.gameOver)
             {
@@ -69,7 +69,7 @@ namespace simulation_game
                 }
                 lblMap.Text += "\n";
             }
-            lblPlayerStats.Text = game.Rounds + "\n";
+            lblPlayerStats.Text = "Rounds: "+game.Rounds + "\n";
 
             //display unit and building stats
 
@@ -119,7 +119,7 @@ namespace simulation_game
             lblMap.Text += "Map loaded <<<>>>";
         }
 
-        public string[] ShowMyDialogBox()
+        public string[] ShowMyDialogBox()//method that uses an InputBox to collect the users choice on map size
         {
             object InputMenu;
             string defaultResponse = "20,20";
