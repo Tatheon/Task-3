@@ -36,7 +36,7 @@ namespace simulation_game
             
         }
 
-        public void setWorld(int numUnits, int numBuildings, string[] mapSize)//multi use method that 
+        public void setWorld(int numUnits, int numBuildings, string[] mapSize)//multi use method that creates and sets up the map
         {
             mapWidth = (int.Parse)(mapSize[0]);
             mapHeight = (int.Parse)(mapSize[1]);
