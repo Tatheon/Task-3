@@ -21,10 +21,6 @@ namespace simulation_game
         public Form1()
         {
             InitializeComponent();
-            
-            //DrawMap();
-            //ShowUnits();
-            //initTimer();
 
         }
 
@@ -144,7 +140,7 @@ namespace simulation_game
             ResetWorld();
         }
 
-        public void ResetWorld()
+        public void ResetWorld()//resets the world without needing to restart the program
         {
             game.Rounds = 1;
             game.world.setWorld(8, 4, ShowMyDialogBox());
