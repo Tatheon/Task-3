@@ -36,7 +36,7 @@ namespace simulation_game
 
         public void GenerateResource()
         {
-            resourcesGenerated += resourcesPerRound ;
+            resourcesGenerated += resourcesPerRound ;//add what was generated
         }
 
         public override Unit DoBuildingFunction()
@@ -44,7 +44,7 @@ namespace simulation_game
             if (resourcePoolRemaining > 0)
             {
                 GenerateResource();
-                resourcePoolRemaining -= resourcesPerRound;
+                resourcePoolRemaining -= resourcesPerRound;//generate recource then subtract what was generated from how much it can produce in total
             }
             
             return null;
@@ -52,7 +52,7 @@ namespace simulation_game
 
         public override string SaveData()
         {
-            return $"RE,{XPos},{YPos},{Team},{Health},{resourcesPerRound},{resourcePoolRemaining}";
+            return $"RE,{XPos},{YPos},{Team},{Health},{resourcesPerRound},{resourcePoolRemaining}";//return all buildings stats
         }
 
         //   properties
