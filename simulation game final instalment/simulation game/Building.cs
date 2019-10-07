@@ -25,6 +25,13 @@ namespace simulation_game
             this.symbol = symbol;
         }
 
+        public int Health
+        {
+            get { return health; }
+            set { health = value; }
+        }
+        
+
         public abstract int XPos { get; set; }
         public abstract int YPos { get; set; }
         public abstract string Team { get; }
@@ -35,5 +42,9 @@ namespace simulation_game
 
         public abstract string SaveData();
         public abstract Unit DoBuildingFunction();
+
+       
+
+
     }
 }

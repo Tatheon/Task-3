@@ -10,7 +10,7 @@ namespace simulation_game
     class GameEngine
     {
         private int rounds = 1;//after all units have had their turn this is incremented
-        public Map world = new Map(10, 4);
+        public Map world = new Map();
         public bool gameOver = false;
         string winningFaction;
 
@@ -18,6 +18,8 @@ namespace simulation_game
         {
             foreach (Building building in world.buildings)
             {
+                if (building.Health <= 0) { continue; }
+
                 if (rounds % building.Speed == 0)  // find mod to see if the building can perform its function
                 {
                     Unit sample = building.DoBuildingFunction();
@@ -35,6 +37,7 @@ namespace simulation_game
             {
                 if (unit.IsDead) { continue; }
 
+                unit.NearestBuilding(world.buildings);
                 unit.NearestEnemy(world.players);
 
                 if(unit.ClosestUnit == null)
@@ -45,18 +48,13 @@ namespace simulation_game
                     return;
                 }
 
-                double healthPercent = unit.Health / unit.MaxHealth * 100;
-                if (healthPercent <= 25)
+                if (unit is Wizzard)
                 {
-                    unit.RandomMove();
-                }
-                else if (unit.WithinRange())
-                {
-                    unit.Attack(unit.ClosestUnit);
+                    WizardLogic((Wizzard)unit);
                 }
                 else
                 {
-                    unit.Move();
+                    BasicUnitLogic(unit);
                 }
 
                 world.UpdateWorld();
@@ -65,14 +63,59 @@ namespace simulation_game
             rounds++;
         }
 
-        public GameEngine()
+        public void BasicUnitLogic(Unit unit)
         {
-
+            double healthPercent = unit.Health / unit.MaxHealth * 100;
+            if (healthPercent <= 25)
+            {
+                unit.RandomMove(world.MapWidth, world.MapHeight);
+            }
+            else if (unit.ClosestBuilding != null & unit.WithinRange(unit.ClosestBuilding))
+            {
+                unit.Attack(unit.ClosestBuilding);
+            }
+            else if (unit.WithinRange())
+            {
+                unit.Attack(unit.ClosestUnit);
+            }
+            else
+            {
+                unit.Move();
+            }
         }
 
-        public string Rounds
+        public void WizardLogic(Wizzard wizzard)
         {
-            get { return "Rounds " + rounds; }
+            bool action = false;
+            double healthPercent = wizzard.Health / wizzard.MaxHealth * 100;
+            if (healthPercent <= 50)
+            {
+                wizzard.RandomMove(world.MapWidth, world.MapHeight);
+                action = true;
+                
+            }
+            else if (!action)
+            {
+              foreach (Unit unit in world.players )
+              {
+                if (wizzard.WithinRange(unit) & unit.Team != "C")
+                {
+                    wizzard.Attack(unit);
+                    action = true;
+                }
+              }
+            }
+
+            if (!action)
+            {
+                wizzard.Move(wizzard.ClosestUnit);
+            }
+        }
+
+        public int Rounds
+        {
+            get { return rounds; }
+            set { rounds = value; }
         }
 
         public string WinningTeam

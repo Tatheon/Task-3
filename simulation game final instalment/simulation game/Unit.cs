@@ -10,6 +10,8 @@ namespace simulation_game
     {
         double closestDistance = 1000;
         Unit closestUnit = null;
+        Building closestBuilding = null;
+
         protected int x, y, maxHealth, health, speed, attack, attackRange;
         protected string team, symbol,name;
         protected bool isInAction, isDead;
@@ -21,9 +23,18 @@ namespace simulation_game
             int yDifference;
            
             for (int i = 0; i < speed; i++)
-            { 
+            {
+                if (closestBuilding != null)
+                {
+                    xDifference = closestBuilding.XPos - Xvalue;
+                    yDifference = closestBuilding.YPos - Yvalue;
+                }
+                else
+                {
                     xDifference = closestUnit.Xvalue - Xvalue;
                     yDifference = closestUnit.Yvalue - Yvalue;
+                }
+               
 
                 if (yDifference == xDifference & yDifference <= 0 & xDifference <= 0)//diagonal movement
                 {
@@ -68,7 +79,9 @@ namespace simulation_game
             }
         }
 
-        public void RandomMove()
+        
+
+        public void RandomMove(int mapWidth, int mapHeight)
         {
             int tryX;
             int tryY;
@@ -118,7 +131,7 @@ namespace simulation_game
                         break;
                 }
 
-                if (CanMove(tryX, tryY))
+                if (CanMove(tryX, tryY, mapWidth, mapHeight))
                 {
                     movable = true;
                 }
@@ -127,21 +140,13 @@ namespace simulation_game
             Yvalue = tryY;
         }
 
-        public void Attack(Unit otherUnit)
-        {
-            otherUnit.Health -= attack;
-            isInAction = false;
+        
+       
 
-            if (otherUnit.Health <= 0)
-            {
-                otherUnit.Kill();
-            }
-        }
-
-        public bool CanMove(int x, int y)
+        public bool CanMove(int x, int y, int mapWidth, int mapHeight)
         {
             bool clear = true;
-            if (x < 0 | x > 19 | y < 0 | y > 19)
+            if (x < 0 | x >= mapWidth | y < 0 | y >= mapHeight)
             {
                 clear = false;
             }
@@ -156,6 +161,30 @@ namespace simulation_game
 
             Xdistance = closestUnit.Xvalue - Xvalue;
             Ydistance = closestUnit.Yvalue - Yvalue;
+            distance = Math.Sqrt(Xdistance * Xdistance + Ydistance * Ydistance);
+
+            if (distance <= attackRange)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public bool WithinRange(Building building)
+        {
+            double distance = 0;
+            int Xdistance;
+            int Ydistance;
+            if (building == null)
+            {
+                return false;   // if there are no buildings left this will be null, hence this way nothing will crash.
+            }
+            Xdistance = building.XPos - Xvalue;
+            Ydistance = building.YPos - Yvalue;
             distance = Math.Sqrt(Xdistance * Xdistance + Ydistance * Ydistance);
 
             if (distance <= attackRange)
@@ -189,11 +218,31 @@ namespace simulation_game
                         closestDistance = distance;
                         closestUnit = unitFocus;
                     }
-
-
-
                 }
-          
+            }
+        }
+
+        public void NearestBuilding(Building[] buildings)
+        {
+            closestDistance = int.MaxValue;
+            closestUnit = null;
+
+            foreach (Building BuildingFocus in buildings)
+            {
+                double distance = 0;
+                int Xdistance;
+                int Ydistance;
+                if (BuildingFocus.Team != Team & BuildingFocus.Health > 0)
+                {
+                    Xdistance = BuildingFocus.XPos - Xvalue;
+                    Ydistance = BuildingFocus.YPos - Yvalue;
+                    distance = Math.Sqrt(Xdistance * Xdistance + Ydistance * Ydistance);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestBuilding = BuildingFocus;
+                    }
+                }
             }
         }
 
@@ -222,6 +271,28 @@ namespace simulation_game
             isDead = false;
         }
 
+        public void Attack(Unit otherUnit)
+        {
+            otherUnit.Health -= attack;
+            isInAction = false;
+
+            if (otherUnit.Health <= 0)
+            {
+                otherUnit.Kill();
+            }
+        }
+
+        public void Attack(Building otherBuilding)
+        {
+            otherBuilding.Health -= attack;
+            isInAction = false;
+
+            if (otherBuilding.Health <= 0)
+            {
+                otherBuilding.Kill();
+            }
+        }
+
         public abstract string SaveData();
 
         //    acess statements
@@ -235,6 +306,11 @@ namespace simulation_game
         public Unit ClosestUnit
         {
             get { return closestUnit; }
+        }
+
+        public Building ClosestBuilding
+        {
+            get { return closestBuilding; }
         }
 
         public int MaxHealth
@@ -271,6 +347,7 @@ namespace simulation_game
             get { return isDead; }
             set { isDead = value; }
         }
+        
 
     
     }

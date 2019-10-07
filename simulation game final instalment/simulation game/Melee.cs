@@ -32,5 +32,7 @@ namespace simulation_game
         {
             return $"M,{Xvalue},{Yvalue},{Team},{Health},{speed},{MaxHealth}";
         }
+
+        
     }
 }

@@ -27,7 +27,15 @@ namespace simulation_game
 
         public override string ToString()
         {
-            return "Building: Factory \n Health: " + health + "\n Team: " + team;
+            if (Health <= 0)
+            {
+                return "Building: Destroyed";
+            }
+            else
+            {
+                return "Building: Factory \n Health: " + health + "\n Team: " + team;
+            }
+            
         }
 
         public int GetFactorySpeed()

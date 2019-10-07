@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Diagnostics;
 
 namespace simulation_game
 {
@@ -18,11 +19,14 @@ namespace simulation_game
         public Random r = new Random();      //r.Next(1,20);   random number within the array's bounds
         string[] teams = { "A", "B", "C" };
 
-        public int mapSize;
+        private int mapWidth;
+        private int mapHeight;
 
 
         const string FILENAME = "MapData.txt";
+        const string FILENAMEMAP = "MettaData.txt";
         const char DELIMITER = ',';
+
         enum UnitSTAT  { Symbol = 0, X = 1, Y = 2, Team = 3, Health = 4, Speed =5, MaxHealth = 6}
         enum FactorySTAT { Symbol = 0, X = 1, Y = 2, Team = 3, Spawnpoint = 4, ProductionSpeed = 5, Health = 6}
         enum ResourceSTAT { Symbol = 0, X = 1, Y = 2, Team = 3, Health = 4, ResourcePerRound = 5, ResourcePool = 6}
@@ -32,10 +36,12 @@ namespace simulation_game
             
         }
 
-        public void setWorld(int numUnits, int numBuildings, int mapSize)
+        public void setWorld(int numUnits, int numBuildings, string[] mapSize)
         {
-            this.mapSize = mapSize;
-            map = new string[mapSize, mapSize];
+            mapWidth = (int.Parse)(mapSize[0]);
+            mapHeight = (int.Parse)(mapSize[1]);
+
+            map = new string[mapWidth, mapHeight];
 
             players = new Unit[numUnits];
             buildings = new Building[numBuildings];
@@ -52,16 +58,16 @@ namespace simulation_game
                 int unitType = r.Next(3);
                 if ( unitType == 0)
                 {
-                    players[i] = new Ranged(r.Next(1, mapSize), r.Next(0, mapSize), teams[r.Next(2)]);   // make a Ranged Boi
+                    players[i] = new Ranged(r.Next(1, mapWidth), r.Next(0, mapHeight), teams[r.Next(2)]);   // make a Ranged Boi
 
                 }
                 else if(unitType == 1)
                 {
-                    players[i] = new Melee(r.Next(1, mapSize), r.Next(0, mapSize), teams[r.Next(2)]);   // make a melee Boi
+                    players[i] = new Melee(r.Next(1, mapWidth), r.Next(0, mapHeight), teams[r.Next(2)]);   // make a melee Boi
                 }
                 else
                 {
-                    players[i] = new Wizzard(r.Next(1, mapSize), r.Next(0, mapSize), teams[3]);  // make a wizard Boi
+                    players[i] = new Wizzard(r.Next(1, mapWidth), r.Next(0, mapHeight), teams[2]);  // make a wizard Boi
                 }
             }
 
@@ -69,7 +75,7 @@ namespace simulation_game
             {
                 if (r.Next(2) == 0)
                 {
-                    int yValue = r.Next(1, mapSize);
+                    int yValue = r.Next(1, mapHeight);
                     int SpawnVal;
                     if (yValue == 0)
                     {
@@ -80,12 +86,12 @@ namespace simulation_game
                         SpawnVal = 1;
                     }
 
-                    buildings[i] = new FactoryBuilding(r.Next(1, mapSize), yValue, teams[r.Next(2)], SpawnVal);
+                    buildings[i] = new FactoryBuilding(r.Next(1, mapWidth), yValue, teams[r.Next(2)], SpawnVal);
 
                 }
                 else
                 {
-                    buildings[i] = new ResourceBuilding(r.Next(1, mapSize), r.Next(1, mapSize), teams[r.Next(2)]);
+                    buildings[i] = new ResourceBuilding(r.Next(1, mapWidth), r.Next(0, mapHeight), teams[r.Next(2)]);
                 }
             }
 
@@ -94,9 +100,9 @@ namespace simulation_game
 
         public void UpdateWorld()
         {
-            for (int y = 0; y < mapSize; y++)
+            for (int y = 0; y < mapHeight; y++)
             {
-                for (int x = 0; x < mapSize; x++)
+                for (int x = 0; x < mapWidth; x++)
                 {
                     map[x, y] = "  '  ";
                 }
@@ -112,14 +118,14 @@ namespace simulation_game
             }
         }
 
-        public void LoadWorld()
+        public int LoadWorld()
         {
             FileStream infile = new FileStream(FILENAME, FileMode.OpenOrCreate, FileAccess.Read);
             StreamReader reader = new StreamReader(infile);
             string line = reader.ReadLine();
             string[] details;
 
-            buildings = new Building[0];
+            buildings = new Building[0];           //add the word details to be saved in their own world file that stores map width, height and round.
             players = new Unit[0];
 
             while (line!=null)
@@ -141,6 +147,12 @@ namespace simulation_game
                         players[players.Length - 1].MaxHealth = (int.Parse)(details[(int)UnitSTAT.MaxHealth]);
                         break;
 
+                    case "W":
+                        Array.Resize(ref players, players.Length + 1);
+                        players[players.Length - 1] = new Wizzard((int.Parse)(details[(int)UnitSTAT.X]), (int.Parse)(details[(int)UnitSTAT.Y]), details[(int)UnitSTAT.Team], (int.Parse)(details[(int)UnitSTAT.Health]), (int.Parse)(details[(int)UnitSTAT.Speed]));
+                        players[players.Length - 1].MaxHealth = (int.Parse)(details[(int)UnitSTAT.MaxHealth]);
+                        break;
+
                     case "F":
                         Array.Resize(ref buildings, buildings.Length + 1);
                         buildings[buildings.Length - 1] = new FactoryBuilding((int.Parse)(details[(int)FactorySTAT.X]), (int.Parse)(details[(int)FactorySTAT.Y]), details[(int)FactorySTAT.Team], (int.Parse)(details[(int)FactorySTAT.Spawnpoint]), (int.Parse)(details[(int)FactorySTAT.ProductionSpeed]), details[(int)FactorySTAT.Symbol], (int.Parse)(details[(int)FactorySTAT.Health]));
@@ -154,12 +166,37 @@ namespace simulation_game
                 line = reader.ReadLine();
 
             }
+
+            int round = LoadMapInfo();
             UpdateWorld();
+
+            
+
             reader.Close();
             infile.Close();
+
+            return round;
         }
 
-        public void SaveWorld()
+        public int LoadMapInfo()
+        {
+            FileStream infile = new FileStream(FILENAMEMAP, FileMode.OpenOrCreate, FileAccess.Read);
+            StreamReader reader = new StreamReader(infile);
+
+            string[] dimentions = reader.ReadLine().Split(DELIMITER);
+            mapWidth = (int.Parse)(dimentions[0]);
+            mapHeight = (int.Parse)(dimentions[1]);
+            map = new string[mapWidth, mapHeight];
+
+            int round = (int.Parse)(reader.ReadLine());
+
+            reader.Close();
+            infile.Close();
+
+            return round;
+        }
+
+        public void SaveWorld(int round)
         {
             
             FileStream outfile = new FileStream(FILENAME, FileMode.Create, FileAccess.Write);
@@ -175,8 +212,33 @@ namespace simulation_game
                 writer.WriteLine(unit.SaveData());
             }
 
+            saveMapInfo(round);
+
             writer.Close();
             outfile.Close();
+        }
+
+
+        public void saveMapInfo(int round)
+        {
+            FileStream outfile = new FileStream(FILENAMEMAP, FileMode.Create, FileAccess.Write);
+            StreamWriter writer = new StreamWriter(outfile);
+
+            writer.WriteLine(mapWidth + "," + mapHeight);
+            writer.WriteLine(round);
+
+            writer.Close();
+            outfile.Close();
+        }
+
+        public int MapHeight
+        {
+            get { return mapHeight; }
+        }
+
+        public int MapWidth
+        {
+            get { return mapWidth; }
         }
     }
 }

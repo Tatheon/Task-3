@@ -34,14 +34,15 @@
             this.btnPause = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
+            this.btnReset = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblMap
             // 
             this.lblMap.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblMap.Location = new System.Drawing.Point(328, 95);
+            this.lblMap.Location = new System.Drawing.Point(523, 17);
             this.lblMap.Name = "lblMap";
-            this.lblMap.Size = new System.Drawing.Size(460, 444);
+            this.lblMap.Size = new System.Drawing.Size(685, 656);
             this.lblMap.TabIndex = 0;
             // 
             // lblPlayerStats
@@ -58,25 +59,25 @@
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(189, 75);
             this.btnStart.TabIndex = 2;
-            this.btnStart.Text = "start";
+            this.btnStart.Text = "Start";
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // btnPause
             // 
-            this.btnPause.Location = new System.Drawing.Point(523, 17);
+            this.btnPause.Location = new System.Drawing.Point(328, 98);
             this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(176, 75);
+            this.btnPause.Size = new System.Drawing.Size(189, 75);
             this.btnPause.TabIndex = 3;
-            this.btnPause.Text = "stop";
+            this.btnPause.Text = "Pause";
             this.btnPause.UseVisualStyleBackColor = true;
             this.btnPause.Click += new System.EventHandler(this.btnPause_Click_1);
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(412, 576);
+            this.btnSave.Location = new System.Drawing.Point(328, 333);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(136, 66);
+            this.btnSave.Size = new System.Drawing.Size(189, 66);
             this.btnSave.TabIndex = 4;
             this.btnSave.Text = "Save game";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -84,19 +85,30 @@
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(554, 576);
+            this.btnLoad.Location = new System.Drawing.Point(328, 405);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(137, 66);
+            this.btnLoad.Size = new System.Drawing.Size(189, 66);
             this.btnLoad.TabIndex = 5;
             this.btnLoad.Text = "Load game";
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
+            // btnReset
+            // 
+            this.btnReset.Location = new System.Drawing.Point(328, 179);
+            this.btnReset.Name = "btnReset";
+            this.btnReset.Size = new System.Drawing.Size(189, 68);
+            this.btnReset.TabIndex = 6;
+            this.btnReset.Text = "Reset";
+            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 682);
+            this.ClientSize = new System.Drawing.Size(1220, 682);
+            this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnPause);
@@ -118,6 +130,7 @@
         private System.Windows.Forms.Button btnPause;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnLoad;
+        private System.Windows.Forms.Button btnReset;
     }
 }
 
